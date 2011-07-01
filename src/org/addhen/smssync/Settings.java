@@ -100,7 +100,8 @@ public class Settings extends PreferenceActivity implements
 	
 	private final Handler mHandler = new Handler();
 	
-	private PackageManager pm;
+    private PackageManager pm;
+
     private ComponentName cn;
 	    
 	@Override

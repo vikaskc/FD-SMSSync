@@ -12,7 +12,7 @@
 	<string name="edittxt_website_pref">Enter The Sync URL</string>
 	<string name="edittxt_website_pref_summary">This is the website that will receive the text
 		messages.</string>
-	<string name="edittxt_website_pref_dialog_title">Enter the Sync URL</string>
+	
 	<string name="edittxt_api_key_pref">Enter the Secret</string>
 	<string name="edittxt_api_key_pref_summary">If a secret/key has been specified at the website,
 		it will be required.</string>

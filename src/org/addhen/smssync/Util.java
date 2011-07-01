@@ -484,6 +484,32 @@ public class Util {
 
         return false;
     }
+    
+    /**
+     * Posts received SMS to a configured callback URL.
+     * 
+     * @param String apiKey
+     * @param String fromAddress
+     * @param String messageBody
+     * @return boolean
+     */
+    public static String postToAWebService2(String messagesFrom, String messagesBody,
+            Context context) {
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        SmsSyncPref.loadPreferences(context);
+
+        if (!SmsSyncPref.website.equals("")) {
+
+            StringBuilder urlBuilder = new StringBuilder(SmsSyncPref.website);
+            params.put("secret", SmsSyncPref.apiKey);
+            params.put("from", messagesFrom);
+            params.put("message", messagesBody);
+            return SmsSyncHttpClient.postSmsToWebService2(urlBuilder.toString(), params);
+        }
+
+        return "";
+    }
 
     /**
      * Validate the callback URL
@@ -571,11 +597,11 @@ public class Util {
      */
     public static void sendSms(String sendTo, String msg) {
 
-    	if (!msg.equals("")) {
-    		SmsManager sms = SmsManager.getDefault();
-    		ArrayList<String> parts = sms.divideMessage(msg);
-    		sms.sendMultipartTextMessage(sendTo, null, parts, null, null);
-    	}
+        if (!msg.equals("")) {
+            SmsManager sms = SmsManager.getDefault();
+            ArrayList<String> parts = sms.divideMessage(msg);
+            sms.sendMultipartTextMessage(sendTo, null, parts, null, null);
+        }
     }
 
     /**
@@ -604,6 +630,70 @@ public class Util {
 
             String task = "";
             String secret = "";
+            if (!TextUtils.isEmpty(response) && response != null) {
+
+                try {
+
+                    jsonObject = new JSONObject(response);
+                    JSONObject payloadObject = jsonObject.getJSONObject("payload");
+
+                    if (payloadObject != null) {
+                        task = payloadObject.getString("task");
+                        secret = payloadObject.getString("secret");
+                        if ((task.equals("send")) && (secret.equals(SmsSyncPref.apiKey))) {
+                            jsonArray = payloadObject.getJSONArray("messages");
+
+                            for (int index = 0; index < jsonArray.length(); ++index) {
+                                jsonObject = jsonArray.getJSONObject(index);
+
+                                sendSms(jsonObject.getString("to"), jsonObject.getString("message"));
+                            }
+
+                        } else {
+                            // no task enabled on the callback url.
+                            showToast(context, R.string.no_task);
+                        }
+
+                    } else {
+
+                        showToast(context, R.string.no_task);
+                    }
+
+                } catch (JSONException e) {
+
+                    showToast(context, R.string.no_task);
+                }
+            }
+        }
+    }
+
+    /**
+     * Performs a task based on what callback URL tells it.
+     * 
+     * @param Context context - the activity calling this method.
+     */
+    public static void performAutoResponse(Context context, String resp) {
+        // load preferences
+        SmsSyncPref.loadPreferences(context);
+
+        // validate configured url
+        int status = validateCallbackUrl(SmsSyncPref.website);
+        if (status == 1) {
+            showToast(context, R.string.no_configured_url);
+        } else if (status == 2) {
+            showToast(context, R.string.invalid_url);
+        } else if (status == 3) {
+            showToast(context, R.string.no_connection);
+        } else {
+
+            StringBuilder uriBuilder = new StringBuilder(SmsSyncPref.website);
+            uriBuilder.append("?task=send");
+
+            String response = resp;
+
+            String task = "";
+            String secret = "";
+
             if (!TextUtils.isEmpty(response) && response != null) {
 
                 try {

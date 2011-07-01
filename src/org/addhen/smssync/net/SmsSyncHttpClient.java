@@ -40,6 +40,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 public class SmsSyncHttpClient {
 
     public static final DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -106,6 +109,54 @@ public class SmsSyncHttpClient {
             return false;
         } catch (IOException e) {
             return false;
+        }
+
+    }
+    
+    /**
+     * Upload SMS to a web service via HTTP POST
+     * 
+     * @param address
+     * @throws MalformedURLException
+     * @throws IOException
+     * @return
+     */
+    public static String postSmsToWebService2(String url, HashMap<String, String> params) {
+        // Create a new HttpClient and Post Header
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost(url);
+
+        try {
+
+            // Add your data
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+            nameValuePairs.add(new BasicNameValuePair("secret", params.get("secret")));
+            nameValuePairs.add(new BasicNameValuePair("from", params.get("from")));
+            nameValuePairs.add(new BasicNameValuePair("message", params.get("message")));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            // Execute HTTP Post Request
+            HttpResponse response = httpclient.execute(httppost);
+
+            if (response.getStatusLine().getStatusCode() == 200) {
+                String resp = getText(response);
+                Log.d("Henry","hehe "+resp);
+                //boolean success = Util.extractPayloadJSON(getText(response));
+
+                if (!TextUtils.isEmpty(resp)) {
+                    return resp;
+                } else {
+                    return "";
+                }
+
+            } else {
+                return "";
+            }
+
+        } catch (ClientProtocolException e) {
+            return "";
+        } catch (IOException e) {
+            return "";
         }
 
     }

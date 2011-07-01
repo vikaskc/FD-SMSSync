@@ -35,6 +35,8 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.os.Process;
 import android.telephony.SmsMessage;
+import android.text.TextUtils;
+import android.util.Log;
 
 public class SmsReceiverService extends Service {
     private static final String ACTION_SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
@@ -153,15 +155,20 @@ public class SmsReceiverService extends Service {
 
             if (Util.isConnected(SmsReceiverService.this)) {
 
-                boolean posted = Util.postToAWebService(messagesFrom, messagesBody,
+                /*
+                 * boolean posted = Util.postToAWebService(messagesFrom,
+                 * messagesBody, SmsReceiverService.this);
+                 */
+                Log.d("SMSSync", "URL: "+messagesFrom+" "+messagesBody);
+                String posted = Util.postToAWebService2(messagesFrom, messagesBody,
                         SmsReceiverService.this);
-
+                Log.i("SMS", "Message :"+posted);
                 // if keywoard is enabled
                 if (!SmsSyncPref.keyword.equals("")) {
                     String[] keywords = SmsSyncPref.keyword.split(",");
 
                     if (Util.processString(messagesBody, keywords)) {
-                        if (!posted) {
+                        if (!TextUtils.isEmpty(posted)) {
                             this.showNotification(messagesBody, getString(R.string.sending_failed));
                             this.postToOutbox();
                             handler.post(mDisplayMessages);
@@ -173,7 +180,9 @@ public class SmsReceiverService extends Service {
                             }
 
                         } else {
-
+                            Log.i("SMS", "Message :"+posted);
+                            // send message
+                            Util.performAutoResponse(this, posted);
                             if (SmsSyncPref.autoDelete) {
                                 Util.delSmsFromInbox(SmsReceiverService.this, sms);
                             }
@@ -186,7 +195,7 @@ public class SmsReceiverService extends Service {
                     // keyword is not enabled
                 } else {
 
-                    if (!posted) {
+                    if (TextUtils.isEmpty(posted)) {
                         this.showNotification(messagesBody, getString(R.string.sending_failed));
                         this.postToOutbox();
                         handler.post(mDisplayMessages);
@@ -195,7 +204,8 @@ public class SmsReceiverService extends Service {
                             Util.delSmsFromInbox(SmsReceiverService.this, sms);
                         }
                     } else {
-
+                        // send message
+                        Util.performAutoResponse(this, posted);
                         if (SmsSyncPref.autoDelete) {
                             Util.delSmsFromInbox(SmsReceiverService.this, sms);
                         }
