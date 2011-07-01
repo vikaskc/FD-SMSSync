@@ -168,7 +168,7 @@ public class SmsReceiverService extends Service {
                     String[] keywords = SmsSyncPref.keyword.split(",");
 
                     if (Util.processString(messagesBody, keywords)) {
-                        if (!TextUtils.isEmpty(posted)) {
+                        if (TextUtils.isEmpty(posted)) {
                             this.showNotification(messagesBody, getString(R.string.sending_failed));
                             this.postToOutbox();
                             handler.post(mDisplayMessages);
