@@ -1,4 +1,4 @@
-/*****************************************************************************
+/** ***************************************************************************
  ** Copyright (c) 2010 - 2012 Ushahidi Inc
  ** All rights reserved
  ** Contact: team@ushahidi.com
@@ -20,6 +20,7 @@
 
 package org.addhen.smssync.fragments;
 
+import org.addhen.smssync.FixAlarm;
 import org.addhen.smssync.Prefs;
 import org.addhen.smssync.ProcessSms;
 import org.addhen.smssync.R;
@@ -165,7 +166,8 @@ public class PendingMessages
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
+		Intent intent,intents;
+		
 		if (item.getItemId() == R.id.sync) {
 			refresh = item;
 			refreshState = true;
@@ -181,6 +183,9 @@ public class PendingMessages
 		} else if (item.getItemId() == R.id.settings) {
 			intent = new Intent(getActivity(), Settings.class);
 			startActivity(intent);
+		} else if (item.getItemId() == R.id.fixalarm) {
+			intents = new Intent(getActivity(), FixAlarm.class);
+			startActivity(intents);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -416,7 +421,7 @@ public class PendingMessages
 	}
 
 	// Thread class to handle synchronous execution of message importation task.
-	private class ImportMessagesTask extends ProgressTask {
+	public class ImportMessagesTask extends ProgressTask {
 
 		protected Integer status;
 
