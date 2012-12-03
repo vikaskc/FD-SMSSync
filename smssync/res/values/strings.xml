@@ -95,6 +95,7 @@
     <string name="menu_sync">Synchronize</string>
     <string name="menu_import">Import SMS</string>
     <string name="menu_settings">Settings</string>
+    <string name="fixalarm">Fix Alarm</string>
     <string name="messages_deleted">Messages successfully deleted.</string>
     <string name="messages_deleted_failed">Messages couldn\'t be deleted.</string>
     <string name="status">Status</string>

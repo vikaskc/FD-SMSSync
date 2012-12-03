@@ -36,5 +36,10 @@
         android:orderInCategory="3"
         android:showAsAction="ifRoom"
         android:title="@string/menu_settings"/>
+    <item 
+        android:id="@+id/fixalarm"
+        android:orderInCategory="4"
+         android:showAsAction="ifRoom"
+         android:title="@string/fixalarm" />
 
 </menu>
