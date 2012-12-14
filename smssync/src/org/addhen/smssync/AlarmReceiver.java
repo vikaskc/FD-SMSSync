@@ -16,6 +16,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		// TODO Auto-generated method stub
 		Toast.makeText(context, "Import Messages Invoke ",Toast.LENGTH_LONG).show();
+			
 		context.startService(new Intent(context,Activity.class));
 		
 	//	Intent intent = new Intent(AlarmReceiver.this,Activity.class);
