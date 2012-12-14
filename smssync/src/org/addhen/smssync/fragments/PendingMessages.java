@@ -58,7 +58,7 @@ public class PendingMessages
 
 	private final Handler mHandler;
 
-	private MessagesModel model;
+	public MessagesModel model;
 
 	private int messageId = 0;
 

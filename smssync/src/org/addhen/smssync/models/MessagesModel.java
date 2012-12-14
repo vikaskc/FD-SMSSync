@@ -161,7 +161,7 @@ public class MessagesModel extends Model {
 	 * 
 	 * @return boolean
 	 */
-	public static boolean deleteAllMessages() {
+	public  boolean deleteAllMessages() {
 		return Database.mMessagesContentProvider.deleteAllMessages();
 	}
 

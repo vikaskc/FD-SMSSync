@@ -136,13 +136,13 @@ private void setAlarm(Calendar targetCal, boolean repeat){
   if(repeat){
    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 
      targetCal.getTimeInMillis(), 
-     TimeUnit.HOURS.toMillis(1),
+     TimeUnit.HOURS.toMillis(6),
      pendingIntent);
    
    textAlarmPrompt.setText(
      "\n\n***\n"
      + "Alarm is set@ " + targetCal.getTime() + "\n"
-     + "Repeat after every 1 Hour\n"
+     + "Repeat after every 6 Hours\n"
      + "***\n");
   }else{
    alarmManager.set(AlarmManager.RTC_WAKEUP, 
